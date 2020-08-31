@@ -27,7 +27,10 @@ def CSS(request):
      return HttpResponse(ht.md_to_html())
    
 def entries(request,url):
+    if  url  not in util.list_entries():
+         return render(request,"encyclopedia/error.html")
+    else:    
+        ht = Md_to_HTML(mdfile = 'entries/'+url+".md")
+        return HttpResponse(ht.md_to_html())
     
-    ht = Md_to_HTML(mdfile = 'entries/'+url+".md")
-    return HttpResponse(ht.md_to_html())
 
