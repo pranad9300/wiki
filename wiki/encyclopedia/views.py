@@ -27,7 +27,7 @@ def css(request):
 #this function return html page on clicking the entries of encyclopedia on homepage
 def entries(request,url):
     #if the given url doesn't exist return error message
-    if  url  not in entries_:
+    if  url  not in util.list_entries():
          return render(request,"encyclopedia/error.html")
     else:    
         content = markdown(util.get_entry(url))
@@ -52,6 +52,7 @@ def newentry(request):
             "entry_exist_error":True
         })
     else:
+        entries_.append(title)
         content = markdown(util.get_entry(title))
         return render(request,'encyclopedia/show_entry.html',{
          "content":content
@@ -59,30 +60,31 @@ def newentry(request):
 
 #on cliking the link 'random page' on layout.html this function will take user to any random page in encyclopedia
 def random_page(request):
-    random_page = choice(entries_)
+    random_page = choice(util.list_entries())
     content = markdown(util.get_entry(random_page))
     return render(request,"encyclopedia/show_entry.html",{
         "content":content
     })
 
+#on clicking edit page on any entry page this function will render a page where user can edit page
 def edit_page(request,which_page_toedit):
-    
     return render(request,"encyclopedia/edit_page.html",{
     "default":util.get_entry(which_page_toedit),
     "which_page_to_edit":which_page_toedit,
-    "entries":entries_
+    "entries":util.list_entries()
     }) 
 
+#on submitting form on edit page this will show user edited entry page
 def page_edited(request):
     filename = f"entries/{request.GET.get('pagename')}.md"
     content = request.GET.get('edit','default')
-    print(filename)
-    
-    default_storage.delete(filename)
-    default_storage.save(filename,ContentFile(content))
+    if default_storage.exists(filename):
+        default_storage.delete(filename)
+    default_storage.save(filename, ContentFile(content))
     content = markdown(util.get_entry(request.GET.get('pagename')))
     return render(request,"encyclopedia/show_entry.html",{
-        "content":content
+        "content":content,
+        "which_page":request.GET.get('pagename')
     })
   
 

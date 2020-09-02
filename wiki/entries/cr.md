@@ -1,1 +1,0 @@
-##cricket is conducted by ICC.

@@ -5,11 +5,12 @@
 {% endblock %}
 
 {% block body %}
-   <h1>Edit {{which_page_toedit}}</h1>
+   <h1>Edit {{which_page_to_edit}}</h1>
    <form action="/page_edited" method="GET">
       <div>
-        <label for="pagename">enter entry name that you are editing:</label>
-        <input type="text" id="pagename" name="pagename" >
+        {% if which_page_to_edit in entries %}
+           <input type="hidden" name="pagename" value="{{which_page_to_edit}}">
+        {% endif %}
       </div>
       <textarea name="edit" id="edit"   style="height: 550px;">{{default}}</textarea><br>
       <button type="submit">submit</button>
