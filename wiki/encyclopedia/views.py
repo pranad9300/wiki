@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from markdown import markdown
+from random import choice
 from . import util
 
         
@@ -27,7 +28,6 @@ def entries(request,url):
          return render(request,"encyclopedia/error.html")
     else:    
         content = markdown(util.get_entry(url))
-        
         return render(request,'encyclopedia/show_entry.html',{
          "content":content
          })
@@ -52,3 +52,11 @@ def newentry(request):
         return render(request,'encyclopedia/show_entry.html',{
          "content":content
          })
+
+#on cliking the link 'random page' on layout.html this function will take user to any random page in encyclopedia
+def random_page(request):
+    random_page = choice(entries_)
+    content = markdown(util.get_entry(random_page))
+    return render(request,"encyclopedia/show_entry.html",{
+        "content":content
+    })
