@@ -3,34 +3,52 @@ from django.http import HttpResponse
 from markdown import markdown
 from . import util
 
-class Md_to_HTML:
-
-    def __init__(self,mdfile):
-        self.mdfile = mdfile
-    def md_to_html(self):
-        md = open(self.mdfile,'r')
-        mdread = md.read()
-        html = markdown(mdread)
-        md.close()
-        return(html)
         
-    
+entries_ = util.list_entries()
          
-
+#this function renders home page of encyclopedia
 def index(request):
+      
        return render(request, "encyclopedia/index.html", {
         "entries": util.list_entries()
        })
     
-def CSS(request):
-     ht = Md_to_HTML(mdfile = 'entries/CSS.md')
-     return HttpResponse(ht.md_to_html())
-   
+#this function return html page on clicking the CSS entry of encyclopedia on homepage
+def css(request):
+     content = markdown(util.get_entry('CSS')) 
+     return render(request,'encyclopedia/show_entry.html',{
+         "content":content
+         })
+
+#this function return html page on clicking the entries of encyclopedia on homepage
 def entries(request,url):
-    if  url  not in util.list_entries():
+    #if the given url doesn't exist return error message
+    if  url  not in entries_:
          return render(request,"encyclopedia/error.html")
     else:    
-        ht = Md_to_HTML(mdfile = 'entries/'+url+".md")
-        return HttpResponse(ht.md_to_html())
-    
+        content = markdown(util.get_entry(url))
+        
+        return render(request,'encyclopedia/show_entry.html',{
+         "content":content
+         })
 
+#onclicking the create new page link this function will take user to create_new_page.html         
+def newpage(request):
+    return render(request,"encyclopedia/create_new_page.html")
+
+#this is a function to add new encyclopedia entry
+def newentry(request):
+    title = request.GET.get('TitleOfPage','default')
+    content = request.GET.get('Markdown_content','default')
+    new_entry_saved = util.save_entry(title,content)
+    #if the entry already exist return error message
+    if new_entry_saved == "error":
+        return render(request,"encyclopedia/error.html",{
+            "error_message":"Sorry, requested entry already exist you can now only edit the entry",
+            "entry_exist_error":True
+        })
+    else:
+        content = markdown(util.get_entry(title))
+        return render(request,'encyclopedia/show_entry.html',{
+         "content":content
+         })

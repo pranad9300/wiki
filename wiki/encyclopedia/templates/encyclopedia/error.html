@@ -5,6 +5,11 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Sorry, Requested page not found!</h1>
+    {% if entry_exist_error %}
+         {{error_message}}
+    {% else %}
+         <h1>Sorry, Requested page not found!</h1>
+    {% endif %}
+    
 
 {% endblock %}

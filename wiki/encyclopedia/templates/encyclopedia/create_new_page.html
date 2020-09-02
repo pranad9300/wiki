@@ -1,0 +1,20 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+    New Page
+{% endblock %}
+
+{% block body %}
+    <form action="/create_new_entry" method="GET">
+        <div>
+            <label for="title">Enter tittle of page:</label> <br>
+            <input type="text" id="title" placeholder="Title" name="TitleOfPage">
+        </div>
+        <div>
+            <label for="mdcontent">markdown content:</label><br>
+            <textarea id="mdcontent" placeholder="Markdown" name="Markdown_content" height="500" width="500"></textarea>
+        </div>
+        <button type="submit">submit</button>
+    </form>
+
+{% endblock %}
