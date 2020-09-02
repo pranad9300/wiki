@@ -2,6 +2,8 @@ from django.shortcuts import render
 from django.http import HttpResponse
 from markdown import markdown
 from random import choice
+from django.core.files.base import ContentFile
+from django.core.files.storage import default_storage
 from . import util
 
         
@@ -18,7 +20,8 @@ def index(request):
 def css(request):
      content = markdown(util.get_entry('CSS')) 
      return render(request,'encyclopedia/show_entry.html',{
-         "content":content
+         "content":content,
+         "which_page":'CSS'
          })
 
 #this function return html page on clicking the entries of encyclopedia on homepage
@@ -29,7 +32,8 @@ def entries(request,url):
     else:    
         content = markdown(util.get_entry(url))
         return render(request,'encyclopedia/show_entry.html',{
-         "content":content
+         "content":content,
+         "which_page":url
          })
 
 #onclicking the create new page link this function will take user to create_new_page.html         
@@ -60,3 +64,26 @@ def random_page(request):
     return render(request,"encyclopedia/show_entry.html",{
         "content":content
     })
+
+def edit_page(request,which_page_toedit):
+    
+    return render(request,"encyclopedia/edit_page.html",{
+    "default":util.get_entry(which_page_toedit),
+    "which_page_to_edit":which_page_toedit,
+    "entries":entries_
+    }) 
+
+def page_edited(request):
+    filename = f"entries/{request.GET.get('pagename')}.md"
+    content = request.GET.get('edit','default')
+    print(filename)
+    
+    default_storage.delete(filename)
+    default_storage.save(filename,ContentFile(content))
+    content = markdown(util.get_entry(request.GET.get('pagename')))
+    return render(request,"encyclopedia/show_entry.html",{
+        "content":content
+    })
+  
+
+    

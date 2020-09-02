@@ -1,0 +1,17 @@
+{% extends "encyclopedia/layout.html" %}
+
+{% block title %}
+   page
+{% endblock %}
+
+{% block body %}
+   <h1>Edit {{which_page_toedit}}</h1>
+   <form action="/page_edited" method="GET">
+      <div>
+        <label for="pagename">enter entry name that you are editing:</label>
+        <input type="text" id="pagename" name="pagename" >
+      </div>
+      <textarea name="edit" id="edit"   style="height: 550px;">{{default}}</textarea><br>
+      <button type="submit">submit</button>
+  </form>
+{% endblock %}
