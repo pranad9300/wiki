@@ -7,8 +7,15 @@ from django.core.files.storage import default_storage
 from . import util
 
         
-entries_ = util.list_entries()
-         
+
+def get_search_result_with_search_entry_query_as_substring(search_entry_query):
+    seq = search_entry_query.lower() 
+    entries_ = util.list_entries()     
+    search_results = []
+    for i in entries_:
+        if seq in i.lower():
+            search_results.append(i)
+    return(search_results)
 #this function renders home page of encyclopedia
 def index(request):
       
@@ -36,14 +43,29 @@ def entries(request,url):
          "which_page":url
          })
 
+
+def search_page(request):
+    search_entry_query = request.GET.get('q','default')
+    if search_entry_query in util.list_entries():
+        content = markdown(util.get_entry(search_entry_query))
+        return render(request,'encyclopedia/show_entry.html',{
+         "content":content
+         })
+    else:
+        search_results = get_search_result_with_search_entry_query_as_substring(search_entry_query)
+        return render(request,"encyclopedia/search_result.html",{
+            "search_results":search_results,
+            "seq":search_entry_query
+        })
+
 #onclicking the create new page link this function will take user to create_new_page.html         
 def newpage(request):
     return render(request,"encyclopedia/create_new_page.html")
 
 #this is a function to add new encyclopedia entry
 def newentry(request):
-    title = request.GET.get('TitleOfPage','default')
-    content = request.GET.get('Markdown_content','default')
+    title = request.GET.get('TitleOfPage')
+    content = request.GET.get('Markdown_content')
     new_entry_saved = util.save_entry(title,content)
     #if the entry already exist return error message
     if new_entry_saved == "error":
@@ -52,10 +74,11 @@ def newentry(request):
             "entry_exist_error":True
         })
     else:
-        entries_.append(title)
+        util.list_entries().append(title)
         content = markdown(util.get_entry(title))
         return render(request,'encyclopedia/show_entry.html',{
-         "content":content
+         "content":content,
+         "which_page":title
          })
 
 #on cliking the link 'random page' on layout.html this function will take user to any random page in encyclopedia
@@ -63,7 +86,8 @@ def random_page(request):
     random_page = choice(util.list_entries())
     content = markdown(util.get_entry(random_page))
     return render(request,"encyclopedia/show_entry.html",{
-        "content":content
+        "content":content,
+        "which_page":random_page
     })
 
 #on clicking edit page on any entry page this function will render a page where user can edit page
