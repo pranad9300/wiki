@@ -5,16 +5,16 @@
 {% endblock %}
 
 {% block body %}
-    <form action="/create_new_entry" method="GET">
-        <div>
+    <form action="{% url 'create_new_entry' %}" method="GET">
+        <div class="form-group">
             <label for="title">Enter tittle of page:</label> <br>
             <input type="text" id="title" placeholder="Title" name="TitleOfPage">
         </div>
-        <div>
+        <div class="form-group">
             <label for="mdcontent">markdown content:</label> <br>
-            <textarea id="mdcontent"  name="Markdown_content" style="height: 600px;" ></textarea>
+            <textarea id="mdcontent" class="border border-dark bg-light rounded-lg"  name="Markdown_content" style="height: 550px;" ></textarea>
         </div>
-        <button type="submit">submit</button>
+        <button type="submit" class="btn btn-dark">submit</button>
     </form>
 
 {% endblock %}

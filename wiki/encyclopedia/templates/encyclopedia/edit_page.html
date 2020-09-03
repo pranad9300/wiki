@@ -1,18 +1,22 @@
 {% extends "encyclopedia/layout.html" %}
 
 {% block title %}
-   page
+   edit {{which_page_to_edit}}
 {% endblock %}
 
 {% block body %}
-   <h1>Edit {{which_page_to_edit}}</h1>
-   <form action="/page_edited" method="GET">
-      <div>
-        {% if which_page_to_edit in entries %}
-           <input type="hidden" name="pagename" value="{{which_page_to_edit}}">
-        {% endif %}
-      </div>
-      <textarea name="edit" id="edit"   style="height: 550px;">{{default}}</textarea><br>
-      <button type="submit">submit</button>
+   <h1 >Edit {{which_page_to_edit}}</h1>
+   <form action="{% url 'page_edited' %}" method="GET">
+          
+          <div class="form-group">
+           {% if which_page_to_edit in entries %}
+              <input type="hidden" name="pagename" value="{{which_page_to_edit}}">
+           {% endif %}
+         </div>
+         <div class="form-group">
+             <textarea name="edit" id="edit" class="border border-dark bg-light rounded-lg"  style="height: 550px;">{{default}}</textarea><br>
+             <button type="submit" class="btn btn-dark">submit</button>
+        </div>
+ 
   </form>
 {% endblock %}

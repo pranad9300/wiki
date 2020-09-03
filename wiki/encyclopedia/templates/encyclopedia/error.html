@@ -1,15 +1,15 @@
 {% extends "encyclopedia/layout.html" %}
-
+{% load static%}
 {% block title %}
     Error
 {% endblock %}
 
 {% block body %}
+  <div >
     {% if entry_exist_error %}
          {{error_message}}
     {% else %}
-         <h1>Sorry, Requested page not found!</h1>
+         <div ><h1  >Sorry, Requested page not found!</h1></div>
     {% endif %}
-    
-
+  </div>  
 {% endblock %}

@@ -5,6 +5,9 @@
 {% endblock %}
 
 {% block body %}
+    <div class="container">
     {{content|safe }}
-    <a href="/edit_page/{{which_page}}">edit page</a>
+
+    <a href="/wiki/edit_page/{{which_page}}">edit page</a>
+    </div>
 {% endblock %}
